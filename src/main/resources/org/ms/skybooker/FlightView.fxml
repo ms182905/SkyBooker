@@ -1,0 +1,67 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import com.jfoenix.controls.JFXButton?>
+<?import de.jensd.fx.glyphs.fontawesome.FontAwesomeIconView?>
+<?import javafx.scene.control.Label?>
+<?import javafx.scene.effect.DropShadow?>
+<?import javafx.scene.layout.AnchorPane?>
+<?import javafx.scene.text.Font?>
+
+<AnchorPane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="600.0" prefWidth="900.0" xmlns="http://javafx.com/javafx/21" xmlns:fx="http://javafx.com/fxml/1" fx:controller="org.ms.skybooker.controller.SceneController">
+   <children>
+      <AnchorPane layoutX="-1.0" prefHeight="600.0" prefWidth="190.0" style="-fx-background-color: #9fd7f5;">
+         <children>
+            <AnchorPane prefHeight="600.0" prefWidth="53.0" style="-fx-background-color: ffff;">
+               <effect>
+                  <DropShadow />
+               </effect>
+               <children>
+                  <FontAwesomeIconView glyphName="COMPASS" layoutX="9.0" layoutY="74.0" size="40" wrappingWidth="34.28571319580078" />
+               </children>
+            </AnchorPane>
+            <JFXButton alignment="BASELINE_LEFT" graphicTextGap="55.0" layoutY="146.0" onMouseClicked="#switchToFlightScene" prefHeight="51.0" prefWidth="187.0" ripplerFill="#bfb7b7" text="Flights">
+               <graphic>
+                  <FontAwesomeIconView glyphName="PLANE" size="25">
+                     <font>
+                        <Font size="25.0" />
+                     </font>
+                  </FontAwesomeIconView>
+               </graphic>
+               <font>
+                  <Font size="18.0" />
+               </font></JFXButton>
+            <JFXButton alignment="BASELINE_LEFT" buttonType="RAISED" graphicTextGap="45.0" layoutY="283.0" onMouseClicked="#switchToBookingScene" prefHeight="51.0" prefWidth="187.0" ripplerFill="#bfb7b7" text="Bookings">
+               <graphic>
+                  <FontAwesomeIconView glyphName="BOOK" lineSpacing="10.0" size="25" />
+               </graphic>
+               <font>
+                  <Font size="18.0" />
+               </font></JFXButton>
+            <JFXButton alignment="BASELINE_LEFT" buttonType="RAISED" graphicTextGap="40.0" layoutX="2.0" layoutY="210.0" onMouseClicked="#switchToPassengerScene" prefHeight="51.0" prefWidth="187.0" ripplerFill="#bfb7b7" text="Passengers">
+               <graphic>
+                  <FontAwesomeIconView glyphName="USER" size="25" />
+               </graphic>
+               <font>
+                  <Font size="18.0" />
+               </font></JFXButton>
+            <Label alignment="CENTER" layoutX="53.0" layoutY="35.0" prefHeight="43.0" prefWidth="137.0" text="SkyBooker">
+               <font>
+                  <Font size="24.0" />
+               </font>
+            </Label>
+            <JFXButton alignment="BASELINE_LEFT" buttonType="RAISED" graphicTextGap="70.0" layoutX="2.0" layoutY="542.0" onMouseClicked="#exitProgram" prefHeight="51.0" prefWidth="187.0" ripplerFill="#bfb7b7" text="Exit">
+               <graphic>
+                  <FontAwesomeIconView glyphName="POWER_OFF" lineSpacing="10.0" size="25" />
+               </graphic>
+               <font>
+                  <Font size="18.0" />
+               </font>
+            </JFXButton>
+         </children>
+         <effect>
+            <DropShadow />
+         </effect>
+      </AnchorPane>
+      <AnchorPane fx:id="contentAnchorPane" layoutX="186.0" layoutY="4.0" prefHeight="600.0" prefWidth="715.0" />
+   </children>
+</AnchorPane>

@@ -5,7 +5,7 @@ import javafx.fxml.FXMLLoader;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
 import javafx.stage.Stage;
-import org.ms.skybooker.persistence.DatabaseManager;
+import org.ms.skybooker.repository.DatabaseManager;
 
 import java.io.IOException;
 

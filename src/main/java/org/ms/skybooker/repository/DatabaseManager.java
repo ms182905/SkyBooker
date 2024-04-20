@@ -1,4 +1,4 @@
-package org.ms.skybooker.persistence;
+package org.ms.skybooker.repository;
 
 import java.sql.Connection;
 import java.sql.DriverManager;

@@ -1,0 +1,19 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.scene.control.TableColumn?>
+<?import javafx.scene.control.TableView?>
+<?import javafx.scene.layout.AnchorPane?>
+
+<AnchorPane prefHeight="600.0" prefWidth="715.0" xmlns="http://javafx.com/javafx/21" xmlns:fx="http://javafx.com/fxml/1" fx:controller="org.ms.skybooker.controller.BookingContentController">
+    <children>
+        <TableView fx:id="tableView" layoutX="14.0" layoutY="14.0" prefHeight="581.0" prefWidth="695.0" AnchorPane.bottomAnchor="10.0" AnchorPane.leftAnchor="10.0" AnchorPane.rightAnchor="10.0" AnchorPane.topAnchor="10.0">
+            <columns>
+                <TableColumn id="passengerCloumn" fx:id="passengerColumn" prefWidth="104.0" text="Passenger" />
+                <TableColumn id="phoneColumn" fx:id="phoneColumn" prefWidth="142.0" text="Phone number" />
+                <TableColumn id="flightNumberColumn" fx:id="flightNumberColumn" prefWidth="110.0" text="Flight number" />
+                <TableColumn id="routeColumn" fx:id="routeColumn" prefWidth="183.0" text="Route" />
+            <TableColumn id="dateColumn" fx:id="dateColumn" prefWidth="155.0" text="Date" />
+            </columns>
+        </TableView>
+    </children>
+</AnchorPane>

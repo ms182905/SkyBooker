@@ -11,6 +11,8 @@ module org.ms.skybooker {
     requires eu.hansolo.tilesfx;
     requires java.sql;
     requires org.xerial.sqlitejdbc;
+    requires static lombok;
+    requires com.jfoenix;
 
     opens org.ms.skybooker to javafx.fxml;
     exports org.ms.skybooker;

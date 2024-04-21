@@ -1,12 +1,17 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
-<?import javafx.scene.control.Label?>
+<?import javafx.scene.control.TableColumn?>
+<?import javafx.scene.control.TableView?>
 <?import javafx.scene.layout.AnchorPane?>
 
-
-<AnchorPane prefHeight="600.0" prefWidth="715.0">
+<AnchorPane prefHeight="600.0" prefWidth="715.0" xmlns="http://javafx.com/javafx/21" xmlns:fx="http://javafx.com/fxml/1" fx:controller="org.ms.skybooker.controller.PassengerContentController">
    <children>
-      <Label prefHeight="100.0" prefWidth="155.0" text="passenger"/>
+      <TableView fx:id="tableView" prefHeight="600.0" prefWidth="450.0" AnchorPane.bottomAnchor="10.0" AnchorPane.leftAnchor="10.0" AnchorPane.rightAnchor="255.0" AnchorPane.topAnchor="10.0">
+        <columns>
+          <TableColumn fx:id="firstNameColumn" prefWidth="130.0" resizable="false" text="First name" />
+          <TableColumn fx:id="lastNameColumn" prefWidth="130.0" resizable="false" text="Last name" />
+            <TableColumn fx:id="phoneColumn" prefWidth="188.0" resizable="false" text="Phone number" />
+        </columns>
+      </TableView>
    </children>
 </AnchorPane>
-

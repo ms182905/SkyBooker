@@ -50,17 +50,18 @@ public class DatabaseManager {
                         );""";
                 statement.execute(createPassengerTable);
 
-                String createFlightPassengerTable = """
+              String createBookingsTable = """
                         CREATE TABLE IF NOT EXISTS Booking (
                             flightNumber TEXT NOT NULL,
                             passengerId INTEGER NOT NULL,
-                            FOREIGN KEY (flightNumber) REFERENCES Flight(flightNumber),
-                            FOREIGN KEY (passengerId) REFERENCES Passenger(id),
+                            FOREIGN KEY (flightNumber) REFERENCES Flight(flightNumber) ON DELETE CASCADE,
+                            FOREIGN KEY (passengerId) REFERENCES Passenger(id) ON DELETE CASCADE,
                             PRIMARY KEY (flightNumber, passengerId)
                         );""";
-                statement.execute(createFlightPassengerTable);
+              statement.execute(createBookingsTable);
 
-                conn.close();
+
+              conn.close();
                 System.out.println("Database has been created.");
                 //addSampleData();
             }
@@ -149,12 +150,11 @@ public class DatabaseManager {
                 ResultSet resultSet =  statement.executeQuery(passengersQuery);
 
                 while (resultSet.next()) {
-                    int id = resultSet.getInt(1);
                     String firstName = resultSet.getString("firstName");
                     String lastName = resultSet.getString("lastName");
                     String phoneNumber = resultSet.getString("phoneNumber");
 
-                    passengerList.add(new Passenger(id, firstName, lastName, phoneNumber));
+                    passengerList.add(new Passenger(firstName, lastName, phoneNumber));
                 }
 
                 conn.close();
@@ -231,11 +231,13 @@ public class DatabaseManager {
     public static void deleteFlight(String flightNumber) {
         String deleteFlightQuery = "DELETE FROM Flight WHERE flightNumber = ?";
 
-        try (Connection conn = DriverManager.getConnection(DATABASE_URL);
-             PreparedStatement pstmt = conn.prepareStatement(deleteFlightQuery)) {
-            pstmt.setString(1, flightNumber);
+        try (Connection conn = DriverManager.getConnection(DATABASE_URL)) {
+            conn.createStatement().execute("PRAGMA foreign_keys = ON");
 
-            pstmt.executeUpdate();
+            try (PreparedStatement pstmt = conn.prepareStatement(deleteFlightQuery)) {
+                pstmt.setString(1, flightNumber);
+                pstmt.executeUpdate();
+            }
         } catch (SQLException e) {
             e.printStackTrace();
         }
@@ -252,6 +254,53 @@ public class DatabaseManager {
             pstmt.setObject(3, flight.getDepartureDateTime().getValue());
             pstmt.setInt(4, flight.getAvailableSeats().getValue());
             pstmt.setString(5, flight.getFlightNumber().getValue());
+
+            pstmt.executeUpdate();
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+    }
+
+    public static void addPassenger(Passenger passenger) {
+        String addFlightQuery = "INSERT INTO Passenger (firstName, lastName, phoneNumber) VALUES (?, ?, ?)";
+
+        try (Connection conn = DriverManager.getConnection(DATABASE_URL);
+             PreparedStatement pstmt = conn.prepareStatement(addFlightQuery)) {
+
+            pstmt.setString(1, passenger.getName().getValue());
+            pstmt.setString(2, passenger.getSurname().getValue());
+            pstmt.setString(3, passenger.getPhoneNumber().getValue());
+
+            pstmt.executeUpdate();
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+    }
+
+    public static void deletePassenger(String phoneNumber) {
+        String deletePassengerQuery = "DELETE FROM Passenger WHERE phoneNumber = ?";
+
+        try (Connection conn = DriverManager.getConnection(DATABASE_URL)) {
+            conn.createStatement().execute("PRAGMA foreign_keys = ON");
+
+            try (PreparedStatement pstmt = conn.prepareStatement(deletePassengerQuery)) {
+                pstmt.setString(1, phoneNumber);
+                pstmt.executeUpdate();
+            }
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+    }
+
+    public static void modifyPassenger(Passenger passenger) {
+        String modifyFlightQuery = "UPDATE Passenger SET firstName = ?, LastName = ?, PhoneNumber = ?";
+
+        try (Connection conn = DriverManager.getConnection(DATABASE_URL);
+             PreparedStatement pstmt = conn.prepareStatement(modifyFlightQuery)) {
+
+            pstmt.setString(1, passenger.getName().getValue());
+            pstmt.setString(2, passenger.getSurname().getValue());
+            pstmt.setObject(3, passenger.getPhoneNumber().getValue());
 
             pstmt.executeUpdate();
         } catch (SQLException e) {

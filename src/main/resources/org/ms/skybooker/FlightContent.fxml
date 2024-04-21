@@ -9,6 +9,7 @@
 <?import javafx.scene.control.TableColumn?>
 <?import javafx.scene.control.TableView?>
 <?import javafx.scene.control.TextField?>
+<?import javafx.scene.effect.Glow?>
 <?import javafx.scene.layout.AnchorPane?>
 <?import javafx.scene.layout.Pane?>
 <?import javafx.scene.text.Font?>
@@ -25,7 +26,7 @@
             <TableColumn fx:id="freeSeatsColumn" prefWidth="78.0" resizable="false" text="Free seats" />
         </columns>
       </TableView>
-      <Pane fx:id="flightActionPane" layoutX="716.0" layoutY="14.0" prefHeight="339.0" prefWidth="289.0" style="-fx-background-color: #9fd7f5;">
+      <Pane fx:id="flightActionPane" layoutX="716.0" layoutY="14.0" prefHeight="339.0" prefWidth="289.0" style="-fx-background-color: #9fd7f5; -fx-background-radius: 20;" AnchorPane.bottomAnchor="247.0" AnchorPane.leftAnchor="716.0" AnchorPane.rightAnchor="10.0" AnchorPane.topAnchor="10.0">
          <children>
             <Label fx:id="actionLabel" alignment="CENTER" prefHeight="39.0" prefWidth="289.0" text="Add flight" textAlignment="CENTER">
                <font>
@@ -34,6 +35,9 @@
                <padding>
                   <Insets right="5.0" />
                </padding>
+               <opaqueInsets>
+                  <Insets />
+               </opaqueInsets>
             </Label>
             <TextField fx:id="flightNumberTextField" layoutX="127.0" layoutY="53.0" prefHeight="25.0" prefWidth="148.0" />
             <Label layoutX="14.0" layoutY="53.0" text="Flight number: ">
@@ -53,7 +57,7 @@
                   <Font size="16.0" />
                </font>
             </Label>
-            <Label alignment="CENTER_RIGHT" layoutX="16.0" layoutY="150.0" prefHeight="25.0" prefWidth="60.0" text="Date:" textAlignment="CENTER">
+            <Label alignment="CENTER_RIGHT" layoutX="17.0" layoutY="150.0" prefHeight="25.0" prefWidth="60.0" text="Date:" textAlignment="CENTER">
                <font>
                   <Font size="16.0" />
                </font>
@@ -65,10 +69,13 @@
                </font>
             </Label>
             <Spinner fx:id="totalSeatsSpinner" editable="true" layoutX="127.0" layoutY="226.0" />
-            <JFXButton fx:id="formActionButton" layoutX="17.0" layoutY="294.0" onMouseClicked="#handleFlightActionButtonClicked" prefHeight="25.0" prefWidth="255.0" ripplerFill="#b92525" style="-fx-background-color: #1470ba;" text="Add" textFill="WHITE">
+            <JFXButton fx:id="formActionButton" layoutX="17.0" layoutY="294.0" onMouseClicked="#handleFlightActionButtonClicked" prefHeight="25.0" prefWidth="255.0" ripplerFill="#b92525" style="-fx-background-color: #1470ba; -fx-background-radius: 20;" text="Add" textFill="WHITE">
                <font>
                   <Font size="15.0" />
                </font>
+               <effect>
+                  <Glow />
+               </effect>
             </JFXButton>
             <Spinner fx:id="hourSpinner" layoutX="67.0" layoutY="183.0" prefHeight="25.0" prefWidth="60.0" />
             <Label alignment="CENTER_RIGHT" layoutY="183.0" prefHeight="25.0" prefWidth="60.0" text="Hour:" textAlignment="CENTER">
@@ -84,8 +91,20 @@
             <Spinner fx:id="minuteSpinner" layoutX="212.0" layoutY="183.0" prefHeight="25.0" prefWidth="60.0" />
          </children>
       </Pane>
-      <Button fx:id="modifyButton" layoutX="716.0" layoutY="437.0" mnemonicParsing="false" onMouseClicked="#modifyElementButtonClicked" prefHeight="31.0" prefWidth="289.0" style="-fx-background-color: #0d00fc;" text="Modify" textFill="WHITE" />
-      <Button fx:id="clearButton" layoutX="716.0" layoutY="484.0" mnemonicParsing="false" onMouseClicked="#clearSelection" prefHeight="31.0" prefWidth="289.0" text="Clear" />
-      <Button fx:id="deleteButton" layoutX="716.0" layoutY="531.0" mnemonicParsing="false" onMouseClicked="#deleteElement" prefHeight="31.0" prefWidth="289.0" style="-fx-background-color: #fc1100;" text="Delete" textFill="WHITE" />
+      <Button fx:id="modifyButton" layoutX="716.0" layoutY="437.0" mnemonicParsing="false" onMouseClicked="#modifyElementButtonClicked" prefHeight="31.0" prefWidth="289.0" style="-fx-background-color: #092375; -fx-background-radius: 20;" text="Modify" textFill="WHITE">
+         <effect>
+            <Glow />
+         </effect>
+      </Button>
+      <Button fx:id="clearButton" layoutX="716.0" layoutY="484.0" mnemonicParsing="false" onMouseClicked="#clearSelection" prefHeight="31.0" prefWidth="289.0" style="-fx-background-color: #211c1c; -fx-background-radius: 20;" text="Clear" textFill="WHITE">
+         <effect>
+            <Glow />
+         </effect>
+      </Button>
+      <Button fx:id="deleteButton" layoutX="716.0" layoutY="531.0" mnemonicParsing="false" onMouseClicked="#deleteElement" prefHeight="31.0" prefWidth="289.0" style="-fx-background-color: #a60c1b; -fx-background-radius: 20;" text="Delete" textFill="WHITE">
+         <effect>
+            <Glow />
+         </effect>
+      </Button>
    </children>
    </AnchorPane>

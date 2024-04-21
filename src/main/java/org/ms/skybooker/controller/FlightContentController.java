@@ -159,7 +159,6 @@ public class FlightContentController {
                 DatabaseManager.addFlight(flight);
                 tableView.getItems().add(flight);
             } else {
-                DatabaseManager.modifyFlight(flight);
                 int index = tableView.getSelectionModel().getSelectedIndex();
                 DatabaseManager.modifyFlight(flight);
                 tableView.getItems().set(index, flight);
@@ -215,7 +214,7 @@ public class FlightContentController {
         if (selectedFlight != null) {
             Alert alert = new Alert(Alert.AlertType.WARNING);
             alert.setTitle("Delete flight confirmation");
-            alert.setHeaderText("Are you sure you want to delete this item?");
+            alert.setHeaderText("Are you sure you want to delete this flight?");
 
             ButtonType buttonTypeOK = new ButtonType("Yes");
             ButtonType buttonTypeCancel = new ButtonType("No", ButtonBar.ButtonData.CANCEL_CLOSE);

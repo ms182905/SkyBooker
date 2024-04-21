@@ -1,58 +1,48 @@
 package org.ms.skybooker.controller;
 
-import javafx.concurrent.Task;
-import javafx.fxml.FXML;
-import javafx.scene.control.*;
-import javafx.scene.input.MouseEvent;
-import net.synedra.validatorfx.Validator;
-import org.ms.skybooker.model.Flight;
-import org.ms.skybooker.repository.DatabaseManager;
-
 import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.time.LocalTime;
 import java.time.format.DateTimeFormatter;
 import java.util.List;
+import java.util.Objects;
+import javafx.concurrent.Task;
+import javafx.fxml.FXML;
+import javafx.scene.control.*;
+import javafx.scene.layout.Pane;
+import net.synedra.validatorfx.Validator;
+import org.ms.skybooker.model.Flight;
+import org.ms.skybooker.repository.DatabaseManager;
 
 public class FlightContentController {
 
+    private final Validator validator = new Validator();
     @FXML
     private TableView<Flight> tableView;
-
     @FXML
     private TableColumn<Flight, String> flightNumberColumn;
-
     @FXML
     private TableColumn<Flight, String> fromColumn;
-
     @FXML
     private TableColumn<Flight, String> toColumn;
-
     @FXML
     private TableColumn<Flight, String> dateColumn;
-
     @FXML
     private TableColumn<Flight, Integer> totalSeatsColumn;
-
     @FXML
     private TableColumn<Flight, Integer> freeSeatsColumn;
-
     @FXML
     private TextField flightNumberTextField;
     @FXML
     private TextField fromTextField;
     @FXML
     private TextField toTextField;
-
     @FXML
     private DatePicker datePicker;
-
     @FXML
     private Spinner<Integer> hourSpinner;
-
     @FXML
     private Spinner<Integer> minuteSpinner;
-
     @FXML
     private Spinner<Integer> totalSeatsSpinner;
     @FXML
@@ -65,8 +55,8 @@ public class FlightContentController {
     private Button formActionButton;
     @FXML
     private Label actionLabel;
-
-    private final Validator validator = new Validator();
+    @FXML
+    private Pane flightActionPane;
 
     public void initialize() {
         flightNumberColumn.setCellValueFactory(data -> data.getValue().getFlightNumber());
@@ -117,7 +107,15 @@ public class FlightContentController {
                     String text = c.get("text");
                     if (text == null || text.isEmpty()) {
                         c.error("Flight number is required.");
+                    } else if (Objects.equals(actionLabel.getText(), "Add flight")) {
+                        for (Flight flight : tableView.getItems()) {
+                            if (text.equals(flight.getFlightNumber().getValue())) {
+                                c.error("Flight number must be unique.");
+                                break;
+                            }
+                        }
                     }
+
                 })
                 .dependsOn("text", flightNumberTextField.textProperty())
                 .decorates(flightNumberTextField);
@@ -153,13 +151,21 @@ public class FlightContentController {
                 .decorates(datePicker);
     }
 
-    public void handleAddFlightButtonClicked(MouseEvent event) {
+    public void handleFlightActionButtonClicked() {
         if (validator.validate()) {
-            Flight newFlight = getFlight();
-            DatabaseManager.addFlight(newFlight);
-            tableView.getItems().add(newFlight);
+            Flight flight = getFlight();
 
-            clearFields();
+            if (Objects.equals(actionLabel.getText(), "Add flight")) {
+                DatabaseManager.addFlight(flight);
+                tableView.getItems().add(flight);
+            } else {
+                DatabaseManager.modifyFlight(flight);
+                int index = tableView.getSelectionModel().getSelectedIndex();
+                DatabaseManager.modifyFlight(flight);
+                tableView.getItems().set(index, flight);
+            }
+
+            clearSelection();
         }
     }
 
@@ -183,6 +189,7 @@ public class FlightContentController {
         datePicker.getEditor().clear();
         hourSpinner.getValueFactory().setValue(12);
         minuteSpinner.getValueFactory().setValue(30);
+        totalSeatsSpinner.setDisable(false);
         totalSeatsSpinner.getValueFactory().setValue(200);
     }
 
@@ -193,9 +200,14 @@ public class FlightContentController {
     }
 
     public void clearSelection() {
+        clearFields();
         tableView.getSelectionModel().clearSelection();
         actionLabel.setText("Add flight");
+        flightActionPane.setStyle("-fx-background-color: #9fd7f5;");
         setButtonsDisabled(true);
+        formActionButton.setText("Add");
+        formActionButton.setStyle("-fx-background-color: #1470ba;");
+        flightNumberTextField.setDisable(false);
     }
 
     public void deleteElement() {
@@ -217,5 +229,26 @@ public class FlightContentController {
                 }
             });
         }
+    }
+
+    public void modifyElementButtonClicked() {
+        Flight selectedFlight = tableView.getSelectionModel().getSelectedItem();
+        flightActionPane.setStyle("-fx-background-color: #c92e2e;");
+        actionLabel.setText("Modify flight");
+        flightNumberTextField.setText(selectedFlight.getFlightNumber().getValue());
+        flightNumberTextField.setDisable(true);
+        fromTextField.setText(selectedFlight.getStartPoint().getValue());
+        toTextField.setText(selectedFlight.getDestination().getValue());
+
+        DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm");
+        LocalDateTime dateTime = LocalDateTime.parse(selectedFlight.getDepartureDateTime().getValue(), formatter);
+
+        datePicker.getEditor().setText(dateTime.getDayOfMonth() + "." + dateTime.getMonthValue() + "." + dateTime.getYear());
+        hourSpinner.getValueFactory().setValue(dateTime.getHour());
+        minuteSpinner.getValueFactory().setValue(dateTime.getMinute());
+        totalSeatsSpinner.getValueFactory().setValue(selectedFlight.getAvailableSeats().getValue());
+        totalSeatsSpinner.setDisable(true);
+        formActionButton.setText("Modify");
+        formActionButton.setStyle("-fx-background-color: #8f1717;");
     }
 }

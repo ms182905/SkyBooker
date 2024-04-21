@@ -1,13 +1,12 @@
 package org.ms.skybooker.controller;
 
+import java.util.List;
 import javafx.concurrent.Task;
 import javafx.fxml.FXML;
 import javafx.scene.control.TableColumn;
 import javafx.scene.control.TableView;
 import org.ms.skybooker.model.Booking;
 import org.ms.skybooker.repository.DatabaseManager;
-
-import java.util.List;
 
 public class BookingContentController {
 

@@ -25,7 +25,7 @@
             <TableColumn fx:id="freeSeatsColumn" prefWidth="78.0" resizable="false" text="Free seats" />
         </columns>
       </TableView>
-      <Pane layoutX="716.0" layoutY="14.0" prefHeight="339.0" prefWidth="289.0" style="-fx-background-color: #9fd7f5;">
+      <Pane fx:id="flightActionPane" layoutX="716.0" layoutY="14.0" prefHeight="339.0" prefWidth="289.0" style="-fx-background-color: #9fd7f5;">
          <children>
             <Label fx:id="actionLabel" alignment="CENTER" prefHeight="39.0" prefWidth="289.0" text="Add flight" textAlignment="CENTER">
                <font>
@@ -65,7 +65,7 @@
                </font>
             </Label>
             <Spinner fx:id="totalSeatsSpinner" editable="true" layoutX="127.0" layoutY="226.0" />
-            <JFXButton fx:id="formActionButton" layoutX="17.0" layoutY="294.0" onMouseClicked="#handleAddFlightButtonClicked" prefHeight="25.0" prefWidth="255.0" ripplerFill="#b92525" style="-fx-background-color: #1470ba;" text="Add" textFill="WHITE">
+            <JFXButton fx:id="formActionButton" layoutX="17.0" layoutY="294.0" onMouseClicked="#handleFlightActionButtonClicked" prefHeight="25.0" prefWidth="255.0" ripplerFill="#b92525" style="-fx-background-color: #1470ba;" text="Add" textFill="WHITE">
                <font>
                   <Font size="15.0" />
                </font>
@@ -84,7 +84,7 @@
             <Spinner fx:id="minuteSpinner" layoutX="212.0" layoutY="183.0" prefHeight="25.0" prefWidth="60.0" />
          </children>
       </Pane>
-      <Button fx:id="modifyButton" layoutX="716.0" layoutY="437.0" mnemonicParsing="false" prefHeight="31.0" prefWidth="289.0" style="-fx-background-color: #0d00fc;" text="Modify" textFill="WHITE" />
+      <Button fx:id="modifyButton" layoutX="716.0" layoutY="437.0" mnemonicParsing="false" onMouseClicked="#modifyElementButtonClicked" prefHeight="31.0" prefWidth="289.0" style="-fx-background-color: #0d00fc;" text="Modify" textFill="WHITE" />
       <Button fx:id="clearButton" layoutX="716.0" layoutY="484.0" mnemonicParsing="false" onMouseClicked="#clearSelection" prefHeight="31.0" prefWidth="289.0" text="Clear" />
       <Button fx:id="deleteButton" layoutX="716.0" layoutY="531.0" mnemonicParsing="false" onMouseClicked="#deleteElement" prefHeight="31.0" prefWidth="289.0" style="-fx-background-color: #fc1100;" text="Delete" textFill="WHITE" />
    </children>

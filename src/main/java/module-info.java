@@ -17,5 +17,7 @@ module org.ms.skybooker {
     opens org.ms.skybooker to javafx.fxml;
     exports org.ms.skybooker;
     exports org.ms.skybooker.controller;
+    exports org.ms.skybooker.repository;
+    exports org.ms.skybooker.model;
     opens org.ms.skybooker.controller to javafx.fxml;
 }

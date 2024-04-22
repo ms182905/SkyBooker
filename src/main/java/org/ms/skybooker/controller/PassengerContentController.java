@@ -97,9 +97,8 @@ public class PassengerContentController {
               String text = c.get("text");
               if (text == null || text.isEmpty()) {
                 c.error("Phone number is required.");
-              } else if (newPassengerMode
-                  && tableView.getItems().stream()
-                      .anyMatch(passenger -> text.equals(passenger.getPhoneNumber().getValue()))) {
+              } else if (tableView.getItems().stream()
+                  .anyMatch(passenger -> text.equals(passenger.getPhoneNumber().getValue()))) {
                 c.error("Phone number must be unique.");
               }
             })
@@ -116,7 +115,8 @@ public class PassengerContentController {
         tableView.getItems().add(passenger);
       } else {
         int index = tableView.getSelectionModel().getSelectedIndex();
-        DatabaseManager.modifyPassenger(passenger);
+        String oldPhoneNumber = tableView.getSelectionModel().getSelectedItem().getPhoneNumber().getValue();
+        DatabaseManager.modifyPassengerPhoneNumber(passenger.getPhoneNumber().getValue(), oldPhoneNumber);
         tableView.getItems().set(index, passenger);
       }
 

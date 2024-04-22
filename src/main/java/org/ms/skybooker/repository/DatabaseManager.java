@@ -9,8 +9,7 @@ import org.ms.skybooker.model.Passenger;
 
 public class DatabaseManager {
   private static final String DRIVER_CLASS = "org.sqlite.JDBC";
-  private static final String DATABASE_URL =
-      "jdbc:sqlite:src/main/java/org/ms/skybooker/repository/flightDatabase.db";
+  private static String DATABASE_URL;
 
   public static Connection getConnection() throws SQLException {
     try {
@@ -22,49 +21,50 @@ public class DatabaseManager {
     }
   }
 
-  public static void createDatabase() {
+  public static void createDatabase(String databaseURL) {
+    DATABASE_URL = databaseURL;
     try {
-      Class.forName(DRIVER_CLASS);
-      Connection conn = DriverManager.getConnection(DATABASE_URL);
+      Connection conn = getConnection();
       if (conn != null) {
         Statement statement = conn.createStatement();
 
         String createFlightTable =
             """
-                        CREATE TABLE IF NOT EXISTS Flight (
-                            flightNumber TEXT PRIMARY KEY,
-                            startPoint TEXT NOT NULL,
-                            destination TEXT NOT NULL,
-                            departureDateTime TEXT NOT NULL,
-                            availableSeats INTEGER NOT NULL
-                        );""";
+              CREATE TABLE IF NOT EXISTS Flight (
+                  flightNumber TEXT PRIMARY KEY,
+                  startPoint TEXT NOT NULL,
+                  destination TEXT NOT NULL,
+                  departureDateTime TEXT NOT NULL,
+                  availableSeats INTEGER NOT NULL);
+            """;
         statement.execute(createFlightTable);
 
         String createPassengerTable =
             """
-                        CREATE TABLE IF NOT EXISTS Passenger (
-                            id INTEGER PRIMARY KEY AUTOINCREMENT,
-                            firstName TEXT NOT NULL,
-                            lastName TEXT NOT NULL,
-                            phoneNumber TEXT NOT NULL
-                        );""";
+              CREATE TABLE IF NOT EXISTS Passenger (
+              id INTEGER PRIMARY KEY AUTOINCREMENT,
+              firstName TEXT NOT NULL,
+              lastName TEXT NOT NULL,
+              phoneNumber TEXT NOT NULL);
+            """;
         statement.execute(createPassengerTable);
 
         String createBookingsTable =
             """
-                        CREATE TABLE IF NOT EXISTS Booking (
-                            flightNumber TEXT NOT NULL,
-                            passengerId INTEGER NOT NULL,
-                            FOREIGN KEY (flightNumber) REFERENCES Flight(flightNumber) ON DELETE CASCADE,
-                            FOREIGN KEY (passengerId) REFERENCES Passenger(id) ON DELETE CASCADE,
-                            PRIMARY KEY (flightNumber, passengerId)
-                        );""";
+              CREATE TABLE IF NOT EXISTS Booking (
+              flightNumber TEXT NOT NULL,
+              passengerId INTEGER NOT NULL,
+              FOREIGN KEY (flightNumber) REFERENCES Flight(flightNumber) ON DELETE CASCADE,
+              FOREIGN KEY (passengerId) REFERENCES Passenger(id) ON DELETE CASCADE,
+              PRIMARY KEY (flightNumber, passengerId));
+            """;
         statement.execute(createBookingsTable);
 
+        statement.close();
         conn.close();
         // addSampleData();
       }
-    } catch (ClassNotFoundException | SQLException e) {
+    } catch (SQLException e) {
       e.printStackTrace();
     }
   }
@@ -77,27 +77,35 @@ public class DatabaseManager {
         Statement statement = conn.createStatement();
 
         String insertFlights =
-            "INSERT INTO Flight (flightNumber, startPoint, destination, departureDateTime, availableSeats) VALUES "
-                + "('FL123', 'New York', 'Los Angeles', '2024-04-22 10:00', 150), "
-                + "('FL456', 'London', 'Paris', '2024-04-23 09:30', 120), "
-                + "('FL789', 'Tokyo', 'Sydney', '2024-04-24 12:00', 200);";
+            """
+              INSERT INTO Flight (flightNumber, startPoint, destination, departureDateTime, availableSeats) VALUES
+              ('FL123', 'New York', 'Los Angeles', '2024-04-22 10:00', 150),
+              ('FL456', 'London', 'Paris', '2024-04-23 09:30', 120),
+              ('FL789', 'Tokyo', 'Sydney', '2024-04-24 12:00', 200);
+            """;
         statement.execute(insertFlights);
 
         String insertPassengers =
-            "INSERT INTO Passenger (firstName, lastName, phoneNumber) VALUES "
-                + "('John', 'Doe', '123-456-7890'), "
-                + "('Jane', 'Smith', '987-654-3210'), "
-                + "('Alice', 'Johnson', '555-123-4567');";
+            """
+              INSERT INTO Passenger (firstName, lastName, phoneNumber) VALUES
+              ('John', 'Doe', '123-456-7890'),
+              ('Jane', 'Smith', '987-654-3210'),
+              ('Alice', 'Johnson', '555-123-4567');
+            """;
         statement.execute(insertPassengers);
 
         String insertBookings =
-            "INSERT INTO Booking (flightNumber, passengerId) VALUES "
-                + "('FL123', 1), "
-                + "('FL123', 2), "
-                + "('FL456', 2), "
-                + "('FL789', 3);";
+            """
+              INSERT INTO Booking (flightNumber, passengerId) VALUES
+              ('FL123', 1),
+              ('FL123', 2),
+              ('FL456', 2),
+              ('FL789', 3);
+            """;
+
         statement.execute(insertBookings);
 
+        statement.close();
         conn.close();
       }
     } catch (ClassNotFoundException | SQLException e) {
@@ -108,8 +116,7 @@ public class DatabaseManager {
   public static List<Flight> getFlights() {
     var flightsList = new ArrayList<Flight>();
     try {
-      Class.forName(DRIVER_CLASS);
-      Connection conn = DriverManager.getConnection(DATABASE_URL);
+      Connection conn = getConnection();
 
       if (conn != null) {
         Statement statement = conn.createStatement();
@@ -145,9 +152,10 @@ public class DatabaseManager {
           flightsList.add(flight);
         }
 
+        statement.close();
         conn.close();
       }
-    } catch (ClassNotFoundException | SQLException e) {
+    } catch (SQLException e) {
       e.printStackTrace();
     }
 
@@ -158,8 +166,7 @@ public class DatabaseManager {
     var passengerList = new ArrayList<Passenger>();
 
     try {
-      Class.forName(DRIVER_CLASS);
-      Connection conn = DriverManager.getConnection(DATABASE_URL);
+      Connection conn = getConnection();
 
       if (conn != null) {
         Statement statement = conn.createStatement();
@@ -175,10 +182,11 @@ public class DatabaseManager {
           passengerList.add(new Passenger(firstName, lastName, phoneNumber));
         }
 
+        statement.close();
         conn.close();
       }
 
-    } catch (ClassNotFoundException | SQLException e) {
+    } catch (SQLException e) {
       e.printStackTrace();
     }
 
@@ -189,21 +197,21 @@ public class DatabaseManager {
     var bookingList = new ArrayList<Booking>();
 
     try {
-      Class.forName(DRIVER_CLASS);
-      Connection conn = DriverManager.getConnection(DATABASE_URL);
+      Connection conn = getConnection();
 
       if (conn != null) {
         Statement statement = conn.createStatement();
         String bookingsQuery =
             """
-                        SELECT Booking.flightNumber, Booking.passengerId,
-                        Flight.startPoint, Flight.destination, Flight.departureDateTime,
-                        Passenger.firstName, Passenger.lastName, Passenger.phoneNumber
-                        FROM Booking
-                        LEFT JOIN Passenger
-                        ON Booking.passengerId = Passenger.id
-                        LEFT JOIN Flight
-                        ON Booking.flightNumber = Flight.flightNumber;""";
+              SELECT Booking.flightNumber, Booking.passengerId,
+              Flight.startPoint, Flight.destination, Flight.departureDateTime,
+              Passenger.firstName, Passenger.lastName, Passenger.phoneNumber
+              FROM Booking
+              LEFT JOIN Passenger
+              ON Booking.passengerId = Passenger.id
+              LEFT JOIN Flight
+              ON Booking.flightNumber = Flight.flightNumber;
+            """;
 
         ResultSet resultSet = statement.executeQuery(bookingsQuery);
 
@@ -221,10 +229,11 @@ public class DatabaseManager {
               new Booking(passengerId, passenger, phoneNumber, flightNumber, route, date));
         }
 
+        statement.close();
         conn.close();
       }
 
-    } catch (ClassNotFoundException | SQLException e) {
+    } catch (SQLException e) {
       e.printStackTrace();
     }
 
@@ -316,15 +325,15 @@ public class DatabaseManager {
     }
   }
 
-  public static void modifyPassenger(Passenger passenger) {
-    String modifyFlightQuery = "UPDATE Passenger SET firstName = ?, LastName = ?, PhoneNumber = ?";
+  public static void modifyPassengerPhoneNumber(String newPhoneNumber, String oldPhoneNumber) {
+
+    String modifyFlightQuery = "UPDATE Passenger SET phoneNumber = ? WHERE phoneNumber = ?";
 
     try (Connection conn = DriverManager.getConnection(DATABASE_URL);
         PreparedStatement pstmt = conn.prepareStatement(modifyFlightQuery)) {
 
-      pstmt.setString(1, passenger.getName().getValue());
-      pstmt.setString(2, passenger.getSurname().getValue());
-      pstmt.setObject(3, passenger.getPhoneNumber().getValue());
+      pstmt.setString(1, newPhoneNumber);
+      pstmt.setString(2, oldPhoneNumber);
 
       pstmt.executeUpdate();
     } catch (SQLException e) {
@@ -381,6 +390,7 @@ public class DatabaseManager {
                   availableSeats,
                   availableSeats - takenSeats);
         }
+        statement.close();
         conn.close();
       }
     } catch (SQLException e) {
@@ -403,6 +413,7 @@ public class DatabaseManager {
 
           passenger = new Passenger(firstName, lastName, phoneNumber);
         }
+        statement.close();
         conn.close();
       }
     } catch (SQLException e) {
@@ -422,6 +433,7 @@ public class DatabaseManager {
         if (resultSet.next()) {
           passengerId = resultSet.getInt("id");
         }
+        statement.close();
         conn.close();
       }
     } catch (SQLException e) {
@@ -449,8 +461,7 @@ public class DatabaseManager {
       String from, String to, String date, int minFreeSeats) {
     var filteredFlightsList = new ArrayList<Flight>();
     try {
-      Class.forName(DRIVER_CLASS);
-      Connection conn = DriverManager.getConnection(DATABASE_URL);
+      Connection conn = getConnection();
 
       if (conn != null) {
         StringBuilder flightsQuery = getFlightsQuery(from, to, date);
@@ -499,9 +510,10 @@ public class DatabaseManager {
           filteredFlightsList.add(flight);
         }
 
+        statement.close();
         conn.close();
       }
-    } catch (ClassNotFoundException | SQLException e) {
+    } catch (SQLException e) {
       e.printStackTrace();
     }
 

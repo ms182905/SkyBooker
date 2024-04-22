@@ -10,7 +10,7 @@ import org.ms.skybooker.repository.DatabaseManager;
 
 class DatabaseManagerTest {
 
-  private static final String TEST_DATABASE_URL = "jdbc:sqlite:src/test/resources/testDatabase.db";
+  private static final String TEST_DATABASE_URL = "jdbc:sqlite:src/test/java/testDatabase.db";
 
   @BeforeEach
   void setUp() {
@@ -20,7 +20,7 @@ class DatabaseManagerTest {
 
   @AfterEach
   void tearDown() {
-    File databaseFile = new File("src/test/resources/testDatabase.db");
+    File databaseFile = new File("src/test/java/testDatabase.db");
 
     if (databaseFile.exists()) {
       if (!databaseFile.delete()) {

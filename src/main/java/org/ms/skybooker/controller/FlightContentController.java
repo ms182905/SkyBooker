@@ -57,6 +57,7 @@ public class FlightContentController {
     private Label actionLabel;
     @FXML
     private Pane flightActionPane;
+    private boolean newFlightMode = true;
 
     public void initialize() {
         flightNumberColumn.setCellValueFactory(data -> data.getValue().getFlightNumber());
@@ -155,7 +156,7 @@ public class FlightContentController {
         if (validator.validate()) {
             Flight flight = getFlight();
 
-            if (Objects.equals(actionLabel.getText(), "Add flight")) {
+            if (newFlightMode) {
                 DatabaseManager.addFlight(flight);
                 tableView.getItems().add(flight);
             } else {
@@ -166,6 +167,8 @@ public class FlightContentController {
 
             clearSelection();
         }
+
+        clearButton.setDisable(false);
     }
 
     private Flight getFlight() {
@@ -202,10 +205,11 @@ public class FlightContentController {
         clearFields();
         tableView.getSelectionModel().clearSelection();
         actionLabel.setText("Add flight");
-        flightActionPane.setStyle("-fx-background-color: #9fd7f5;");
+        newFlightMode = true;
+        flightActionPane.setStyle("-fx-background-color: #9fd7f5; -fx-background-radius: 20;");
         setButtonsDisabled(true);
         formActionButton.setText("Add");
-        formActionButton.setStyle("-fx-background-color: #1470ba;");
+        formActionButton.setStyle("-fx-background-color: #1470ba; -fx-background-radius: 20;");
         flightNumberTextField.setDisable(false);
     }
 
@@ -232,8 +236,9 @@ public class FlightContentController {
 
     public void modifyElementButtonClicked() {
         Flight selectedFlight = tableView.getSelectionModel().getSelectedItem();
-        flightActionPane.setStyle("-fx-background-color: #c92e2e;");
+        flightActionPane.setStyle("-fx-background-color: #c92e2e; -fx-background-radius: 20;");
         actionLabel.setText("Modify flight");
+        newFlightMode = false;
         flightNumberTextField.setText(selectedFlight.getFlightNumber().getValue());
         flightNumberTextField.setDisable(true);
         fromTextField.setText(selectedFlight.getStartPoint().getValue());
@@ -248,6 +253,6 @@ public class FlightContentController {
         totalSeatsSpinner.getValueFactory().setValue(selectedFlight.getAvailableSeats().getValue());
         totalSeatsSpinner.setDisable(true);
         formActionButton.setText("Modify");
-        formActionButton.setStyle("-fx-background-color: #8f1717;");
+        formActionButton.setStyle("-fx-background-color: #8f1717; -fx-background-radius: 20;");
     }
 }

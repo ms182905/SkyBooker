@@ -1,5 +1,6 @@
 package org.ms.skybooker.repository;
 
+import javafx.beans.property.StringProperty;
 import org.ms.skybooker.model.Booking;
 import org.ms.skybooker.model.Flight;
 import org.ms.skybooker.model.Passenger;
@@ -308,5 +309,109 @@ public class DatabaseManager {
         }
     }
 
+    public static void deleteBooking(String flightNumber, int passengerId) {
+        String deleteBookingQuery = "DELETE FROM Booking WHERE flightNumber = ? AND passengerId = ?";
+
+        try (Connection conn = DriverManager.getConnection(DATABASE_URL)) {
+            conn.createStatement().execute("PRAGMA foreign_keys = ON");
+
+            try (PreparedStatement pstmt = conn.prepareStatement(deleteBookingQuery)) {
+                pstmt.setString(1, flightNumber);
+                pstmt.setInt(2, passengerId);
+                pstmt.executeUpdate();
+            }
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+    }
+
+    public static Flight getFlight(String flightNumber) {
+        Flight flight = null;
+        try {
+            Connection conn = getConnection();
+            if (conn != null) {
+                Statement statement = conn.createStatement();
+                String query = "SELECT * FROM Flight WHERE flightNumber = '" + flightNumber + "'";
+                ResultSet resultSet = statement.executeQuery(query);
+                if (resultSet.next()) {
+                    String startPoint = resultSet.getString("startPoint");
+                    String destination = resultSet.getString("destination");
+                    String departureDateTime = resultSet.getString("departureDateTime");
+                    int availableSeats = resultSet.getInt("availableSeats");
+
+                    Statement takenSeatsStatement = conn.createStatement();
+                    String takenSeatsQuery = "SELECT COUNT(*) FROM Booking WHERE flightNumber = '" + flightNumber + "';";
+                    ResultSet takenSeatsResultSet = takenSeatsStatement.executeQuery(takenSeatsQuery);
+
+                    int takenSeats = 0;
+                    if (takenSeatsResultSet.next()) {
+                        takenSeats = takenSeatsResultSet.getInt(1);
+                    }
+
+                    flight = new Flight(flightNumber, startPoint, destination, departureDateTime, availableSeats, availableSeats - takenSeats);
+                }
+                conn.close();
+            }
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+        return flight;
+    }
+
+    public static Passenger getPassenger(String phoneNumber) {
+        Passenger passenger = null;
+        try {
+            Connection conn = getConnection();
+            if (conn != null) {
+                Statement statement = conn.createStatement();
+                String query = "SELECT * FROM Passenger WHERE phoneNumber = '" + phoneNumber + "'";
+                ResultSet resultSet = statement.executeQuery(query);
+                if (resultSet.next()) {
+                    String firstName = resultSet.getString("firstName");
+                    String lastName = resultSet.getString("lastName");
+
+                    passenger = new Passenger(firstName, lastName, phoneNumber);
+                }
+                conn.close();
+            }
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+        return passenger;
+    }
+
+    public static int getPassengerId(String phoneNumber) {
+        int passengerId = -1;
+        try {
+            Connection conn = getConnection();
+            if (conn != null) {
+                Statement statement = conn.createStatement();
+                String query = "SELECT id FROM Passenger WHERE phoneNumber = '" + phoneNumber + "'";
+                ResultSet resultSet = statement.executeQuery(query);
+                if (resultSet.next()) {
+                    passengerId = resultSet.getInt("id");
+                }
+                conn.close();
+            }
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+        return passengerId;
+    }
+
+    public static void addBooking(Booking booking) {
+        String addFlightQuery = "INSERT INTO Booking (flightNumber, passengerId) VALUES (?, ?)";
+
+        try (Connection conn = DriverManager.getConnection(DATABASE_URL);
+             PreparedStatement pstmt = conn.prepareStatement(addFlightQuery)) {
+
+            pstmt.setString(1, booking.getFlightNumber().getValue());
+            pstmt.setInt(2, booking.getPassengerId());
+
+            pstmt.executeUpdate();
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+    }
 }
 

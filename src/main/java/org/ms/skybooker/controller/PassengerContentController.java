@@ -4,6 +4,7 @@ import javafx.concurrent.Task;
 import javafx.fxml.FXML;
 import javafx.scene.control.*;
 import javafx.scene.layout.Pane;
+import net.synedra.validatorfx.GraphicDecoration;
 import net.synedra.validatorfx.Validator;
 import org.ms.skybooker.model.Booking;
 import org.ms.skybooker.model.Flight;
@@ -49,6 +50,7 @@ public class PassengerContentController {
     private TextField lastNameTextField;
     @FXML
     private TextField phoneNumberTextField;
+    private boolean newPassengerMode = true;
 
     public void initialize() {
         firstNameColumn.setCellValueFactory(data -> data.getValue().getName());
@@ -104,13 +106,8 @@ public class PassengerContentController {
                     String text = c.get("text");
                     if (text == null || text.isEmpty()) {
                         c.error("Phone number is required.");
-                    } else if (Objects.equals(actionLabel.getText(), "Add flight")) {
-                        for (Passenger passenger : tableView.getItems()) {
-                            if (text.equals(passenger.getPhoneNumber().getValue())) {
-                                c.error("Phone number must be unique.");
-                                break;
-                            }
-                        }
+                    } else if (newPassengerMode && tableView.getItems().stream().anyMatch(passenger -> text.equals(passenger.getPhoneNumber().getValue()))) {
+                            c.error("Phone number must be unique.");
                     }})
                     .dependsOn("text", phoneNumberTextField.textProperty())
                             .decorates(phoneNumberTextField);
@@ -122,7 +119,7 @@ public class PassengerContentController {
         if (validator.validate()) {
             Passenger passenger = getPassenger();
 
-            if (Objects.equals(actionLabel.getText(), "Add passenger")) {
+            if (newPassengerMode) {
                 DatabaseManager.addPassenger(passenger);
                 tableView.getItems().add(passenger);
             } else {
@@ -133,6 +130,8 @@ public class PassengerContentController {
 
             clearSelection();
         }
+
+        clearButton.setDisable(false);
     }
 
     private Passenger getPassenger() {
@@ -159,10 +158,11 @@ public class PassengerContentController {
         clearFields();
         tableView.getSelectionModel().clearSelection();
         actionLabel.setText("Add passenger");
-        passengerActionPane.setStyle("-fx-background-color: #9fd7f5;");
+        newPassengerMode = true;
+        passengerActionPane.setStyle("-fx-background-color: #9fd7f5; -fx-background-radius: 20;");
         setButtonsDisabled(true);
         formActionButton.setText("Add");
-        formActionButton.setStyle("-fx-background-color: #1470ba;");
+        formActionButton.setStyle("-fx-background-color: #1470ba; -fx-background-radius: 20;");
         firstNameTextField.setDisable(false);
         lastNameTextField.setDisable(false);
     }
@@ -190,14 +190,15 @@ public class PassengerContentController {
 
     public void modifyElementButtonClicked() {
         Passenger passenger = tableView.getSelectionModel().getSelectedItem();
-        passengerActionPane.setStyle("-fx-background-color: #c92e2e;");
+        passengerActionPane.setStyle("-fx-background-color: #c92e2e; -fx-background-radius: 20;");
         actionLabel.setText("Modify passenger");
+        newPassengerMode = false;
         firstNameTextField.setText(passenger.getName().getValue());
         lastNameTextField.setText(passenger.getSurname().getValue());
         firstNameTextField.setDisable(true);
         lastNameTextField.setDisable(true);
         formActionButton.setText("Modify");
-        formActionButton.setStyle("-fx-background-color: #8f1717;");
+        formActionButton.setStyle("-fx-background-color: #8f1717; -fx-background-radius: 20;");
     }
 
 }

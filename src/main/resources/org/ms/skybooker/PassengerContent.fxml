@@ -23,7 +23,7 @@
       </TableView>
       <Pane fx:id="passengerActionPane" layoutX="697.0" layoutY="33.0" prefHeight="288.0" prefWidth="289.0" style="-fx-background-color: #9fd7f5; -fx-background-radius: 20;" AnchorPane.rightAnchor="10.0" AnchorPane.topAnchor="10.0">
          <children>
-            <Label fx:id="actionLabel" alignment="CENTER" prefHeight="39.0" prefWidth="289.0" text="Add Passenger" textAlignment="CENTER">
+            <Label fx:id="actionLabel" alignment="CENTER" prefHeight="39.0" prefWidth="289.0" text="Add passenger" textAlignment="CENTER">
                <font>
                   <Font size="27.0" />
                </font>

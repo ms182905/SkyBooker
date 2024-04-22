@@ -142,7 +142,7 @@
             <!-- Default configuration for running with: mvn clean javafx:run -->
             <id>default-cli</id>
             <configuration>
-              <mainClass>org.ms.skybooker/org.ms.skybooker.HelloApplication</mainClass>
+              <mainClass>org.ms.skybooker/org.ms.skybooker.Main</mainClass>
               <launcher>app</launcher>
               <jlinkZipName>app</jlinkZipName>
               <jlinkImageName>app</jlinkImageName>

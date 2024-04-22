@@ -2,11 +2,11 @@ package org.ms.skybooker.controller;
 
 import com.jfoenix.controls.JFXButton;
 import java.io.IOException;
+import java.util.Objects;
 import javafx.application.Platform;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Node;
-import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.AnchorPane;
 
 public class SceneController {
@@ -29,9 +29,11 @@ public class SceneController {
     }
   }
 
-  public void switchToFlightScene(MouseEvent event) throws IOException {
+  public void switchToFlightScene() throws IOException {
     Node node;
-    node = (Node) FXMLLoader.load(getClass().getResource("/org/ms/skybooker/FlightContent.fxml"));
+    node =
+        FXMLLoader.load(
+            Objects.requireNonNull(getClass().getResource("/org/ms/skybooker/FlightContent.fxml")));
     contentAnchorPane.getChildren().setAll(node);
 
     flightsButton.setStyle("-fx-background-color: brown");
@@ -42,7 +44,9 @@ public class SceneController {
   public void switchToPassengerScene() throws IOException {
     Node node;
     node =
-        (Node) FXMLLoader.load(getClass().getResource("/org/ms/skybooker/PassengerContent.fxml"));
+        FXMLLoader.load(
+            Objects.requireNonNull(
+                getClass().getResource("/org/ms/skybooker/PassengerContent.fxml")));
     contentAnchorPane.getChildren().setAll(node);
 
     flightsButton.setStyle("-fx-background-color: transparent;");
@@ -50,9 +54,12 @@ public class SceneController {
     bookingsButton.setStyle("-fx-background-color: transparent;");
   }
 
-  public void switchToBookingScene(MouseEvent event) throws IOException {
+  public void switchToBookingScene() throws IOException {
     Node node;
-    node = (Node) FXMLLoader.load(getClass().getResource("/org/ms/skybooker/BookingContent.fxml"));
+    node =
+        FXMLLoader.load(
+            Objects.requireNonNull(
+                getClass().getResource("/org/ms/skybooker/BookingContent.fxml")));
     contentAnchorPane.getChildren().setAll(node);
 
     flightsButton.setStyle("-fx-background-color: transparent;");
@@ -60,7 +67,7 @@ public class SceneController {
     bookingsButton.setStyle("-fx-background-color: brown;");
   }
 
-  public void exitProgram(MouseEvent event) throws IOException {
+  public void exitProgram() {
     Platform.exit();
     System.exit(0);
   }

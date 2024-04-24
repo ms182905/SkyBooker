@@ -257,6 +257,7 @@ public class FlightContentController {
     toFilterComboBox.setValue(null);
     fromFilterComboBox.setValue(null);
     freeSeatsFilterSpinner.getValueFactory().setValue(100);
+    clearSelection();
     loadFlights();
   }
 
